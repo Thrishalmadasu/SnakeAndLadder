@@ -224,8 +224,6 @@ classDiagram
         +getRule : String
     }
 
-    %% Concrete Strategy Implementations
-    
     %% Winning Strategy Implementations
     class ExactWinStrategy {
         +hasWon : boolean
