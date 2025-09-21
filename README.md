@@ -100,7 +100,6 @@ classDiagram
         -isValidSnake(int, int, int) boolean
     }
 
-
     %% Board Entities
     interface BoardEntity {
         +getStart() int
