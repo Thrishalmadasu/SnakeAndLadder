@@ -28,7 +28,7 @@ classDiagram
     %% Core Game Classes
     class Game {
         -Board board
-        -List~Player~ players
+        -ListOfPlayers players
         -DiceService diceService
         -WinningStrategy winStrategy
         -GameStartStrategy startStrategy
@@ -38,298 +38,287 @@ classDiagram
         -int currentPlayerIndex
         -Player winner
         -boolean gameOver
-        +builder() Builder
-        +play() void
-        +getWinner() Player
-        +isGameOver() boolean
-        +getPlayers() List~Player~
-        +getBoard() Board
+        +builder : GameBuilder
+        +play : void
+        +getWinner : Player
+        +isGameOver : boolean
+        +getPlayers : ListOfPlayers
+        +getBoard : Board
     }
 
     class GameBuilder {
         -Board board
-        -List~Player~ players
+        -ListOfPlayers players
         -DiceService diceService
         -WinningStrategy winStrategy
         -GameStartStrategy startStrategy
         -SpecialRuleStrategy specialRule
         -CollisionStrategy collisionStrategy
         -TurnContinuationStrategy turnContinuationStrategy
-        +withBoard(Board) Builder
-        +withPlayers(List~Player~) Builder
-        +addPlayer(Player) Builder
-        +withDiceService(DiceService) Builder
-        +withWinningStrategy(WinningStrategy) Builder
-        +withStartStrategy(GameStartStrategy) Builder
-        +withSpecialRule(SpecialRuleStrategy) Builder
-        +withCollisionStrategy(CollisionStrategy) Builder
-        +withTurnContinuationStrategy(TurnContinuationStrategy) Builder
-        +build() Game
-        -validate() void
+        +withBoard : GameBuilder
+        +withPlayers : GameBuilder
+        +addPlayer : GameBuilder
+        +withDiceService : GameBuilder
+        +withWinningStrategy : GameBuilder
+        +withStartStrategy : GameBuilder
+        +withSpecialRule : GameBuilder
+        +withCollisionStrategy : GameBuilder
+        +withTurnContinuationStrategy : GameBuilder
+        +build : Game
     }
 
     class GameDemo {
-        +main(String[]) void
+        +main : void
     }
 
     %% Board and Entities
     class Board {
         -int size
-        -Map~Integer, BoardEntity~ entities
-        +Board(int)
-        +addEntity(BoardEntity) void
-        +copy() Board
-        +applyEntity(int) int
-        +getSize() int
-        +getEntities() Collection~BoardEntity~
-        +hasEntity(int) boolean
-        +toString() String
+        -MapIntBoardEntity entities
+        +addEntity : void
+        +copy : Board
+        +applyEntity : int
+        +getSize : int
+        +getEntities : CollectionBoardEntity
+        +hasEntity : boolean
+        +toString : String
     }
 
     class BoardFactory {
         -Random random
-        +createEasyBoard() Board
-        +createMediumBoard() Board
-        +createHardBoard() Board
-        -createBoard(Difficulty) Board
-        -createEasyBoardInternal() Board
-        -createMediumBoardInternal() Board
-        -createHardBoardInternal() Board
-        -getRow(int, int) int
-        -isValidLadder(int, int, int) boolean
-        -isValidSnake(int, int, int) boolean
+        +createEasyBoard : Board
+        +createMediumBoard : Board
+        +createHardBoard : Board
     }
 
-    %% Board Entities
-    interface BoardEntity {
-        +getStart() int
-        +getEnd() int
-        +getType() String
-        +apply(int) int
-        +copy() BoardEntity
+    class BoardEntity {
+        <<interface>>
+        +getStart : int
+        +getEnd : int
+        +getType : String
+        +apply : int
+        +copy : BoardEntity
     }
 
     class Snake {
         -int head
         -int tail
-        +Snake(int, int)
-        +getStart() int
-        +getEnd() int
-        +getType() String
-        +apply(int) int
-        +getHead() int
-        +getTail() int
-        +copy() BoardEntity
-        +toString() String
+        +getStart : int
+        +getEnd : int
+        +getType : String
+        +apply : int
+        +getHead : int
+        +getTail : int
+        +copy : BoardEntity
     }
 
     class Ladder {
         -int bottom
         -int top
-        +Ladder(int, int)
-        +getStart() int
-        +getEnd() int
-        +getType() String
-        +apply(int) int
-        +getBottom() int
-        +getTop() int
-        +copy() BoardEntity
-        +toString() String
+        +getStart : int
+        +getEnd : int
+        +getType : String
+        +apply : int
+        +getBottom : int
+        +getTop : int
+        +copy : BoardEntity
     }
 
     %% Players
-    interface Player {
-        +getName() String
-        +getPosition() int
-        +setPosition(int) void
-        +hasStarted() boolean
-        +setStarted(boolean) void
-        +getConsecutiveSixes() int
-        +setConsecutiveSixes(int) void
-        +incrementSixes() void
-        +resetSixes() void
-        +shouldSkipTurn() boolean
-        +setSkipTurn(boolean) void
-        +reset() void
-        +getType() String
-        +copy() Player
+    class Player {
+        <<interface>>
+        +getName : String
+        +getPosition : int
+        +setPosition : void
+        +hasStarted : boolean
+        +setStarted : void
+        +getConsecutiveSixes : int
+        +setConsecutiveSixes : void
+        +incrementSixes : void
+        +resetSixes : void
+        +shouldSkipTurn : boolean
+        +setSkipTurn : void
+        +reset : void
+        +getType : String
+        +copy : Player
     }
 
-    abstract class BasePlayer {
+    class BasePlayer {
+        <<abstract>>
         #String name
         #int position
         #boolean started
         #int consecutiveSixes
         #boolean skipTurn
-        +BasePlayer(String)
-        #BasePlayer(BasePlayer)
-        +getName() String
-        +getPosition() int
-        +setPosition(int) void
-        +hasStarted() boolean
-        +setStarted(boolean) void
-        +getConsecutiveSixes() int
-        +setConsecutiveSixes(int) void
-        +incrementSixes() void
-        +resetSixes() void
-        +shouldSkipTurn() boolean
-        +setSkipTurn(boolean) void
-        +reset() void
-        +toString() String
+        +getName : String
+        +getPosition : int
+        +setPosition : void
+        +hasStarted : boolean
+        +setStarted : void
+        +getConsecutiveSixes : int
+        +setConsecutiveSixes : void
+        +incrementSixes : void
+        +resetSixes : void
+        +shouldSkipTurn : boolean
+        +setSkipTurn : void
+        +reset : void
+        +toString : String
     }
 
     class HumanPlayer {
-        +HumanPlayer(String)
-        +getType() String
-        +copy() Player
+        +getType : String
+        +copy : Player
     }
 
     class BotPlayer {
-        +BotPlayer(String)
-        +getType() String
-        +copy() Player
+        +getType : String
+        +copy : Player
     }
 
     %% Dice and Services
-    enum Dice {
+    class Dice {
+        <<enumeration>>
         INSTANCE
-        -Random random
-        +roll() int
-        +rollMultiple(int) int
-        +rollIndividual(int) int[]
+        +roll : int
+        +rollMultiple : int
+        +rollIndividual : int[]
     }
 
     class DiceService {
         -int diceCount
         -Dice dice
-        +DiceService(int)
-        +roll() int
-        +rollIndividual() int[]
-        +contains(int) boolean
-        +getDiceCount() int
+        +roll : int
+        +rollIndividual : int[]
+        +contains : boolean
+        +getDiceCount : int
     }
 
     %% Strategy Interfaces
-    interface WinningStrategy {
-        +hasWon(int, int, int) boolean
-        +getNewPosition(int, int, int) int
+    class WinningStrategy {
+        <<interface>>
+        +hasWon : boolean
+        +getNewPosition : int
     }
 
-    interface GameStartStrategy {
-        +canStart(int) boolean
-        +getRule() String
+    class GameStartStrategy {
+        <<interface>>
+        +canStart : boolean
+        +getRule : String
     }
 
-    interface SpecialRuleStrategy {
-        +apply(Player, int, int) boolean
-        +getDescription() String
+    class SpecialRuleStrategy {
+        <<interface>>
+        +apply : boolean
+        +getDescription : String
     }
 
-    interface TurnContinuationStrategy {
-        +shouldContinueTurn(int) boolean
-        +getDescription() String
+    class TurnContinuationStrategy {
+        <<interface>>
+        +shouldContinueTurn : boolean
+        +getDescription : String
     }
 
-    interface CollisionStrategy {
-        +handle(Player, List~Player~, int) void
-        +getRule() String
+    class CollisionStrategy {
+        <<interface>>
+        +handle : void
+        +getRule : String
     }
 
-    %% Winning Strategies
+    %% Concrete Strategy Implementations
+    
+    %% Winning Strategy Implementations
     class ExactWinStrategy {
-        +hasWon(int, int, int) boolean
-        +getNewPosition(int, int, int) int
+        +hasWon : boolean
+        +getNewPosition : int
     }
 
     class OvershootWinStrategy {
-        +hasWon(int, int, int) boolean
-        +getNewPosition(int, int, int) int
+        +hasWon : boolean
+        +getNewPosition : int
     }
 
-    %% Game Start Strategies
+    %% Game Start Strategy Implementations
     class SixToStartStrategy {
-        +canStart(int) boolean
-        +getRule() String
+        +canStart : boolean
+        +getRule : String
     }
 
     class NormalStartStrategy {
-        +canStart(int) boolean
-        +getRule() String
+        +canStart : boolean
+        +getRule : String
     }
 
-    %% Special Rule Strategies
+    %% Special Rule Strategy Implementations
     class RestartOnThreeSixesStrategy {
-        +apply(Player, int, int) boolean
-        +getDescription() String
+        +apply : boolean
+        +getDescription : String
     }
 
     class SkipTurnOnThreeSixesStrategy {
-        +apply(Player, int, int) boolean
-        +getDescription() String
+        +apply : boolean
+        +getDescription : String
     }
 
-    %% Turn Continuation Strategies
+    %% Turn Continuation Strategy Implementations
     class RollAgainOnSixStrategy {
-        +shouldContinueTurn(int) boolean
-        +getDescription() String
+        +shouldContinueTurn : boolean
+        +getDescription : String
     }
 
     class NoExtraTurnsStrategy {
-        +shouldContinueTurn(int) boolean
-        +getDescription() String
+        +shouldContinueTurn : boolean
+        +getDescription : String
     }
 
-    %% Collision Strategies
+    %% Collision Strategy Implementations
     class KillCollisionStrategy {
-        +handle(Player, List~Player~, int) void
-        +getRule() String
+        +handle : void
+        +getRule : String
     }
 
     class NoCollisionStrategy {
-        +handle(Player, List~Player~, int) void
-        +getRule() String
+        +handle : void
+        +getRule : String
     }
 
     %% Relationships
-    Game *-- GameBuilder : contains
-    Game *-- Board : contains
-    Game *-- Player : contains
-    Game *-- DiceService : contains
-    Game *-- WinningStrategy : contains
-    Game *-- GameStartStrategy : contains
-    Game *-- SpecialRuleStrategy : contains
-    Game *-- TurnContinuationStrategy : contains
-    Game *-- CollisionStrategy : contains
+    Game *-- GameBuilder
+    Game *-- Board
+    Game *-- Player
+    Game *-- DiceService
+    Game *-- WinningStrategy
+    Game *-- GameStartStrategy
+    Game *-- SpecialRuleStrategy
+    Game *-- TurnContinuationStrategy
+    Game *-- CollisionStrategy
 
-    BoardFactory --> Board : creates
-    Board *-- BoardEntity : contains
-    
-    Snake ..|> BoardEntity : implements
-    Ladder ..|> BoardEntity : implements
-    
-    BasePlayer ..|> Player : implements
-    HumanPlayer --|> BasePlayer : extends
-    BotPlayer --|> BasePlayer : extends
-    
-    DiceService *-- Dice : contains
-    
-    ExactWinStrategy ..|> WinningStrategy : implements
-    OvershootWinStrategy ..|> WinningStrategy : implements
-    
-    SixToStartStrategy ..|> GameStartStrategy : implements
-    NormalStartStrategy ..|> GameStartStrategy : implements
-    
-    RestartOnThreeSixesStrategy ..|> SpecialRuleStrategy : implements
-    SkipTurnOnThreeSixesStrategy ..|> SpecialRuleStrategy : implements
-    
-    RollAgainOnSixStrategy ..|> TurnContinuationStrategy : implements
-    NoExtraTurnsStrategy ..|> TurnContinuationStrategy : implements
-    
-    KillCollisionStrategy ..|> CollisionStrategy : implements
-    NoCollisionStrategy ..|> CollisionStrategy : implements
+    BoardFactory --> Board
+    Board *-- BoardEntity
 
-    GameDemo --> Game : creates
-    GameDemo --> BoardFactory : uses
+    Snake ..|> BoardEntity
+    Ladder ..|> BoardEntity
+
+    BasePlayer ..|> Player
+    HumanPlayer --|> BasePlayer
+    BotPlayer --|> BasePlayer
+
+    DiceService *-- Dice
+
+    %% Strategy Implementation Relationships
+    ExactWinStrategy ..|> WinningStrategy
+    OvershootWinStrategy ..|> WinningStrategy
+
+    SixToStartStrategy ..|> GameStartStrategy
+    NormalStartStrategy ..|> GameStartStrategy
+
+    RestartOnThreeSixesStrategy ..|> SpecialRuleStrategy
+    SkipTurnOnThreeSixesStrategy ..|> SpecialRuleStrategy
+
+    RollAgainOnSixStrategy ..|> TurnContinuationStrategy
+    NoExtraTurnsStrategy ..|> TurnContinuationStrategy
+
+    KillCollisionStrategy ..|> CollisionStrategy
+    NoCollisionStrategy ..|> CollisionStrategy
 ```
 
 ## Usage Example
@@ -420,26 +409,4 @@ The `BoardFactory` class follows proper encapsulation principles:
   - `createEasyBoard()` - Creates easy difficulty board
   - `createMediumBoard()` - Creates medium difficulty board  
   - `createHardBoard()` - Creates hard difficulty board
-- **Row Validation**: Internal helper methods ensure logical board layout:
-  - `getRow(int position, int boardSize)` - Calculates row number for any position
-  - `isValidLadder(int bottom, int top, int boardSize)` - Validates ladder spans different rows
-  - `isValidSnake(int head, int tail, int boardSize)` - Validates snake spans different rows
-- **No Direct Access**: Clients cannot access `BoardFactory.Difficulty.MEDIUM` anymore
 - **Clean Interface**: Simple method calls like `BoardFactory.createMediumBoard()`
-
-## Running the Game
-
-Execute the `GameDemo` class to see the game in action with different configurations:
-
-```bash
-javac -d bin src/main/java/com/snakeladder/*.java src/main/java/com/snakeladder/**/*.java
-java -cp bin com.snakeladder.GameDemo
-```
-
-## Extensibility
-
-The design allows for easy extension:
-- Add new player types by extending `BasePlayer`
-- Create new strategies by implementing the respective interfaces
-- Add new board entities by implementing `BoardEntity`
-- Modify game rules without changing core game logic
